@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2047
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "Nav_System", "Nav_System\Nav_System.pyproj", "{94A5F38D-6EC2-4100-9D19-AAFCDD7A950D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{94A5F38D-6EC2-4100-9D19-AAFCDD7A950D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94A5F38D-6EC2-4100-9D19-AAFCDD7A950D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F58E4594-8F41-4194-A9CB-36946EBA612C}
+	EndGlobalSection
+EndGlobal
