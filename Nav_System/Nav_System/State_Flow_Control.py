@@ -1,8 +1,13 @@
+
 import networkx as nx
 import matplotlib.pyplot as plt
 import sys
 import time
 import threading
+
+#################################################
+import Recipe_Mode as RM
+
 Action_Juge_Name = 'Action_Juge'
 Start_Node_list =[]
 End_Node ="S16"
@@ -11,18 +16,55 @@ Set_Node_Color = "Set_Node_Color"
 
 
 #################状態遷移の関する記述部#######################################
-def Create_State_transition():
+#def Create_State_transition():
+#	G = nx.DiGraph()
+#	#G.add_node("S0")
+#	#State_list = ["S1","S2","S3","S4","S5","S6","S7","S8","S9","S10","S11","S12","S13","S14","S15","S16"]
+#	State_list = ["S1","S2","S3","S4","S5","S6","S7","S8","S9","S10","S11","S12","S13","S14","S15","S16","SS1","SS2","SS3","SS4"]
+#	G.add_nodes_from(["S1","S2","S3","S4","S5","S6","S7","S8","S9","S10","S11","S12","S13","S14","S15","S16"])
+#	G.add_nodes_from(["SS1","SS2","SS3","SS4"])
+#	G.add_edges_from([("S2","S3"),("S4","S5"),("S7","S8"),("S9","S10"),
+#					  ("S6","S11"),("S8","S11"),("S11","S12"),("S12","S13"),
+#					  ("S1","S13"),("S3","S13"),("S5","S13"),("S13","S14"),("S10","S14"),
+#					  ("S14","S15"),("S15","S16")])
+#	G.add_edges_from([("SS1","SS2"),("SS2","SS3"),("SS3","SS4")])
+#	nx.set_node_attributes(G, name=End_Node , values={"S16":End_Node})
+#	nx.set_node_attributes(G, name=Action_Juge_Name , values=False)
+#	nx.set_node_attributes(G, name= Set_Node_Color, values="y")
+#	return G,State_list
+def Create_State_transition_init():
+
+	total_recipe_state_list,first_recipe_state_list,second_recipe_state_list,first_recipe_flow_edges_list,second_recipe_flow_edges_list = RM.Recipe()
 	G = nx.DiGraph()
+
+
+	
 	#G.add_node("S0")
 	#State_list = ["S1","S2","S3","S4","S5","S6","S7","S8","S9","S10","S11","S12","S13","S14","S15","S16"]
-	State_list = ["S1","S2","S3","S4","S5","S6","S7","S8","S9","S10","S11","S12","S13","S14","S15","S16","SS1","SS2","SS3","SS4"]
-	G.add_nodes_from(["S1","S2","S3","S4","S5","S6","S7","S8","S9","S10","S11","S12","S13","S14","S15","S16"])
-	G.add_nodes_from(["SS1","SS2","SS3","SS4"])
-	G.add_edges_from([("S2","S3"),("S4","S5"),("S7","S8"),("S9","S10"),
-					  ("S6","S11"),("S8","S11"),("S11","S12"),("S12","S13"),
-					  ("S1","S13"),("S3","S13"),("S5","S13"),("S13","S14"),("S10","S14"),
-					  ("S14","S15"),("S15","S16")])
-	G.add_edges_from([("SS1","SS2"),("SS2","SS3"),("SS3","SS4")])
+	State_list = total_recipe_state_list
+	G.add_nodes_from(first_recipe_state_list)
+	G.add_nodes_from(second_recipe_state_list)
+	G.add_edges_from(first_recipe_flow_edges_list)
+	G.add_edges_from(second_recipe_flow_edges_list)
+	nx.set_node_attributes(G, name=End_Node , values={"S16":End_Node})
+	nx.set_node_attributes(G, name=Action_Juge_Name , values=False)
+	nx.set_node_attributes(G, name= Set_Node_Color, values="y")
+	return G,State_list
+
+def Create_State_transition():
+
+	total_recipe_state_list,first_recipe_state_list,second_recipe_state_list,first_recipe_flow_edges_list,second_recipe_flow_edges_list = RM.Recipe()
+	G = nx.DiGraph()
+
+
+	
+	#G.add_node("S0")
+	#State_list = ["S1","S2","S3","S4","S5","S6","S7","S8","S9","S10","S11","S12","S13","S14","S15","S16"]
+	State_list = total_recipe_state_list
+	G.add_nodes_from(first_recipe_state_list)
+	G.add_nodes_from(second_recipe_state_list)
+	G.add_edges_from(first_recipe_flow_edges_list)
+	G.add_edges_from(second_recipe_flow_edges_list)
 	nx.set_node_attributes(G, name=End_Node , values={"S16":End_Node})
 	nx.set_node_attributes(G, name=Action_Juge_Name , values=False)
 	nx.set_node_attributes(G, name= Set_Node_Color, values="y")
@@ -56,7 +98,7 @@ def Check_Node_Status(G,target_state):
 	f_state = G.pred[target_state]
 
 	if  not f_state:
-		#print("END")
+		print("END")
 		Start_Node_list.append(target_state)
 		pass
 	else:
@@ -68,8 +110,8 @@ def Check_Node_Status(G,target_state):
 
 #################センシングの関する記述部#####################################################
 def Sensing():
-	#return input("Sensing: ")
-	return "S1"
+	return input("Sensing: ")
+	#return "S1"
 #############################################################################################
 
 #################ナビゲーションの関する記述部################################################
@@ -85,8 +127,9 @@ def Control_Nav():
 
 
 def Control_State(Status_Graph,State_list):
-	print("Thread1")
+
 	while(True):
+		print("A")
 		now_state = Sensing()
 		nx.set_node_attributes(Status_Graph, name = Action_Juge_Name ,values ={now_state:True})
 		nx.set_node_attributes(Status_Graph, name = Set_Node_Color ,values ={now_state:"c"})
@@ -99,7 +142,7 @@ def Control_State(Status_Graph,State_list):
 		for key in State_list:
 			color_list.append(nx.get_node_attributes(Status_Graph, Set_Node_Color)[key])
 
-		#print(color_list)
+		print(color_list)
 		#print(dict(Status_Graph.nodes))
 
 		position = nx.spring_layout(Status_Graph,)
@@ -108,6 +151,8 @@ def Control_State(Status_Graph,State_list):
 		nx.draw_networkx_edges(Status_Graph,position)
 		nx.draw_networkx_labels(Status_Graph,position)
 		plt.show()
+		
+		
 
 def Main():
 	
@@ -121,6 +166,21 @@ def Main():
 	
 	thread_1.start()
 	thread_2.start()
+
+def Main2(now_state):
+	
+	Status_Graph,State_list = Create_State_transition()
+	Check_Node_Status(Status_Graph,now_state)
+	#print(Start_Node_list)
+	Control_State(Status_Graph,State_list)
+
+
+def Main3(now_state):
+	#初期化
+	Status_Graph,State_list = Create_State_transition_init()
+	Check_Node_Status(Status_Graph,now_state)
+
+	
 
 def Debeg():
 	
@@ -146,5 +206,6 @@ def Debeg():
 	#nx.draw_networkx(Status_Graph)
 	plt.show()
 
-Main()
+#Main()
+Main3("S1")
 #Debeg()

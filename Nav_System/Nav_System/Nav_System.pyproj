@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>94a5f38d-6ec2-4100-9d19-aafcdd7a950d</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Nav_System.py</StartupFile>
+    <StartupFile>State_Flow_Control.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,7 +21,31 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Connect.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Main.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Nav_GUI.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sensing.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="State_Flow.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Nav_Control.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Nav_System.py" />
+    <Compile Include="Recipe_Mode.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="State_Flow_Control.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="test.py">
       <SubType>Code</SubType>
     </Compile>
