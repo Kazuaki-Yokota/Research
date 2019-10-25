@@ -7,61 +7,50 @@ import time
 class Client:
 	def __init__(self):
 		HOST = "localhost"
-		PORT =10001
+		PORT =50006
 		self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.s.connect((HOST, PORT))
-
+		
 class MainFrame(wx.Frame):
 	def __init__(self,parent,id):
 		wx.Frame.__init__(self,parent,id,title = "Nav",size = (500,500))
 
 		p = wx.Panel(self)
-		self.text = wx.TextCtrl(p,-1,"",size=(200,200))
-		btn1 = wx.Button(p,-1,"HELP")
+		self.text = wx.TextCtrl(p,-1,"",size=(500,200),style = wx.TE_MULTILINE)
+
+		font  = wx.Font(20,wx.FONTFAMILY_DEFAULT,wx.FONTSTYLE_NORMAL,wx.FONTWEIGHT_NORMAL)
+		self.text.SetFont(font)
+		btn1 = wx.Button(p,-1,"Connect")
 		btn2 = wx.Button(p,-1,"NEXT")
 
+
+		
 		btn1.Bind(wx.EVT_BUTTON,self.Connect)
-		btn2.Bind(wx.EVT_BUTTON,self.Send)
+		#btn2.Bind(wx.EVT_BUTTON,self.Send)
 
 		sizer = wx.BoxSizer(wx.VERTICAL)
 		sizer.Add(self.text,0,wx.ALL,5)
 		sizer.Add(btn1,0,wx.ALL,5)
-
+		sizer.Add(btn2,0,wx.ALL,5)
 		p.SetSizer(sizer)
 		self.working = 0
 
-	def Send(self,event):
-		self.data = self.text.GetValue().encode('utf-8')
-		print(type(self.data))
 	def Connect(self,event):
-		self.data = None
-		self.answ = None
-
-		if not self.working:
-			self.working =1
-			self.need_abort = 0
-
-			self.c = Client()
-
-			while 1:
-				time.sleep(0.1)
-				wx.Yield()
-
-				if self.need_abort:
-					break
-				if self.data != None:
-					self.c.s.send(self.data)
-					self.data = None
-					self.answ = self.c.s.recv(1024)
-				if self.answ != None:
+		IP = "localhost"
+		Port =50006
+		with socket.socket(socket.AF_INET,socket.SOCK_STREAM) as s:
+			s.connect((IP,Port))
+			self.answ =s.recv(1024)
+			print("Nav: ",self.answ.decode("utf-8"))
+			if self.answ != None:
+					self.text.Clear()
 					self.text.SetValue(self.answ)
 					self.answ = None
-			self.working = 0
 
-	def Disconnect(self,event):
-		if self.working:
-			self.c.s.close()
-			self.need_abort = 1
+			print("Close Nav_GUI of TCP Client")
+			s.sendall(b"end")
+			s.close()
+			
 
 class MainApp(wx.App):
 	def OnInit(self):

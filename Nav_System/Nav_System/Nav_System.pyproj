@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>94a5f38d-6ec2-4100-9d19-aafcdd7a950d</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>State_Flow_Control.py</StartupFile>
+    <StartupFile>Connect.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
