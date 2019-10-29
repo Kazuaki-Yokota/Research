@@ -28,11 +28,11 @@ def Record_memory(memory,work_name,node_name,cost,Multitasking):
 
 	if Multitasking:
 		sub_cost = 1
-		mult_f = True
+		
 	else:
 		print(cost)
 		sub_cost =cost
-		mult_f = False
+		
 
 
 	memory[work_name]["state"]=False
@@ -49,7 +49,7 @@ def Record_memory(memory,work_name,node_name,cost,Multitasking):
 
 	print("################")
 	#print(memory)
-	return memory,mult_f
+	return memory
 
 
 def Check_Time_Memory(G,memory,time_count,mult_f):
@@ -59,15 +59,20 @@ def Check_Time_Memory(G,memory,time_count,mult_f):
 			result.append(key)
 
 	
-	
+		
 		#print(memory[name]["time_memory"][-1])
 		for name in result:
 			name = str(name)
+			print(name)
 			if len(memory[name]["time_memory"]) == time_count:
 				memory[name]["state"] = True
-				print("AAAAAA")
-				if memory[name]["time_memory"][-1] != Find_Specific_Attribute_Node(G,"Multitasking",True):
+				print("###########################################")
+				print(name)
+				print("mul",Find_Specific_Attribute_Node(G,"Multitasking",True))
+				print("now",memory[name]["time_memory"][-1])
+				if not (memory[name]["time_memory"][-1] in Find_Specific_Attribute_Node(G,"Multitasking",True))and not (memory[name]["time_memory"][-1] in [""]):
 					mult_f = True
+					print("mult_fをTrueにします")
 				print(name,"をTrueにします。")
 	return memory,mult_f
 
@@ -124,6 +129,9 @@ def Main():
 		pri_f_result = Find_Specific_Attribute_Node(G,"Priority_Flag",True)
 
 
+		print("##############")
+		print(time_count)
+		print("Mult_F",mult_f)
 		if mult_f:
 			try:
 				#優先フラグか一般か？
@@ -159,12 +167,12 @@ def Main():
 				#別のタスクを並行しても大丈夫か？
 				if not now_task in  Find_Specific_Attribute_Node(G,"Multitasking",True):
 					print("並行タスクできません。シングルタスク処理を行います。")
-					memory,mult_f = Record_memory(memory,work_name,now_task,cost,False)
-				
+					memory = Record_memory(memory,work_name,now_task,cost,False)
+					mult_f = False
 
 				else:
 					print("並行タスク処理を行います。")
-					memory,mult_f = Record_memory(memory,work_name,now_task,cost,True)
+					memory = Record_memory(memory,work_name,now_task,cost,True)
 				
 
 				pprint.pprint(memory)
