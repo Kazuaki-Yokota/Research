@@ -12,10 +12,13 @@ Start_Node_list =[]
 Set_Node_Color = "Set_Node_Color"
 Action_Juge_Name = 'Action_Juge'
 Priority_Flag = "Priority_Flag"
+Cost_Time = "Cost_Time"
+Use_Resource = "Use_Resource"
+Multitasking = "Multitasking"
 #フローグラフ初期化関数
 def Create_State_transition_init():
 
-	total_recipe_state_list,first_recipe_state_list,second_recipe_state_list,first_recipe_flow_edges_list,second_recipe_flow_edges_list,cost_time = RM.Recipe()
+	total_recipe_state_list,first_recipe_state_list,second_recipe_state_list,first_recipe_flow_edges_list,second_recipe_flow_edges_list,cost_time,use_resource,multitasking = RM.Recipe()
 	G = nx.DiGraph()
 
 	State_list = total_recipe_state_list
@@ -24,26 +27,43 @@ def Create_State_transition_init():
 	G.add_edges_from(first_recipe_flow_edges_list)
 	G.add_edges_from(second_recipe_flow_edges_list)
 
-	#料理iの最終調理作業jの設定
+	####各ノードに情報を追加設定#################################################################################################################
+	nx.set_node_attributes(G, name=Action_Juge_Name , values=False)
+	nx.set_node_attributes(G, name= Set_Node_Color, values="y")
+	nx.set_node_attributes(G, name= Priority_Flag, values=False)
+	####料理iの最終調理作業jの設定######################
 	End_Node =["S16","SS4"]
 	for i in range(0,len(End_Node)):
 		print(End_Node[i])
 		nx.set_node_attributes(G, name="End_Node" , values={End_Node[i]:End_Node[i]})
-	###############################
+	#####################################################
 	
-	
-	nx.set_node_attributes(G, name=Action_Juge_Name , values=False)
-	nx.set_node_attributes(G, name= Set_Node_Color, values="y")
-	nx.set_node_attributes(G, name= Priority_Flag, values=False)
-
-
-	#優先Flagを設定
+	####優先Flagを設定###################################
 	priority_flag =["S9","SS1"]
 	for i in range(0,len(priority_flag)):
 		print(End_Node[i])
 		nx.set_node_attributes(G, name=Priority_Flag , values={priority_flag[i]:True})
-	###############################
+	#####################################################
 
+	####各作業の時間#####################################
+	for node_num,cost in cost_time.items():
+		G.nodes[node_num][Cost_Time] = cost
+	#####################################################
+
+	####各作業で使用するリソース#########################
+	for resource_name,node_num_list in use_resource.items():
+		for node_num in node_num_list:
+			G.nodes[node_num][Use_Resource] = resource_name
+	#####################################################
+
+	####各作業で使用するリソース#########################
+	for multitasking_name,node_num_list in multitasking.items():
+		for node_num in node_num_list:
+			G.nodes[node_num][Multitasking] = True
+	#####################################################
+
+
+	###############################################################################################################################################
 	#position = nx.spring_layout(G)
 	#nx.draw_networkx_nodes(G,position)
 	#nx.draw_networkx_edges(G,position)
