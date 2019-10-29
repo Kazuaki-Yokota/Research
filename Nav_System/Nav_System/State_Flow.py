@@ -11,10 +11,11 @@ import Recipe_Mode as RM
 Start_Node_list =[]
 Set_Node_Color = "Set_Node_Color"
 Action_Juge_Name = 'Action_Juge'
+Priority_Flag = "Priority_Flag"
 #フローグラフ初期化関数
 def Create_State_transition_init():
 
-	total_recipe_state_list,first_recipe_state_list,second_recipe_state_list,first_recipe_flow_edges_list,second_recipe_flow_edges_list = RM.Recipe()
+	total_recipe_state_list,first_recipe_state_list,second_recipe_state_list,first_recipe_flow_edges_list,second_recipe_flow_edges_list,cost_time = RM.Recipe()
 	G = nx.DiGraph()
 
 	State_list = total_recipe_state_list
@@ -23,16 +24,26 @@ def Create_State_transition_init():
 	G.add_edges_from(first_recipe_flow_edges_list)
 	G.add_edges_from(second_recipe_flow_edges_list)
 
+	#料理iの最終調理作業jの設定
 	End_Node =["S16","SS4"]
-	for i in range(0,len(End_Node)-1):
-		#print(End_Node[i])
+	for i in range(0,len(End_Node)):
+		print(End_Node[i])
 		nx.set_node_attributes(G, name="End_Node" , values={End_Node[i]:End_Node[i]})
-	#End_Node = "S16"
-	#nx.set_node_attributes(G, name="End_Node" , values={"S16":End_Node})
+	###############################
+	
+	
 	nx.set_node_attributes(G, name=Action_Juge_Name , values=False)
 	nx.set_node_attributes(G, name= Set_Node_Color, values="y")
+	nx.set_node_attributes(G, name= Priority_Flag, values=False)
 
-	
+
+	#優先Flagを設定
+	priority_flag =["S9","SS1"]
+	for i in range(0,len(priority_flag)):
+		print(End_Node[i])
+		nx.set_node_attributes(G, name=Priority_Flag , values={priority_flag[i]:True})
+	###############################
+
 	#position = nx.spring_layout(G)
 	#nx.draw_networkx_nodes(G,position)
 	#nx.draw_networkx_edges(G,position)
@@ -52,6 +63,12 @@ def Check_Node_Status(G,target_state):
 			#print(i_state)
 			Check_Node_Status(G,i_state)
 
+
+
+
+
+
+
 #遷移状態を記録する
 def Control_State(G,state_list,now_state):
 
@@ -69,6 +86,7 @@ def Control_State(G,state_list,now_state):
 	#nx.draw_networkx_edges(G,position)
 	#nx.draw_networkx_labels(G,position)
 	#plt.show()
+
 	
 
 
@@ -84,7 +102,7 @@ def Initialization():
 	#初期状態候補
 	#print(Start_Node_list)
 	##################################
-	return G,state_list
+	return G,state_list,Start_Node_list
 
 def Main(now_state):
 	G,state_list = Initialization()
