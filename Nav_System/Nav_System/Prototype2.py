@@ -45,7 +45,7 @@ def init():
 	return memory,cost_memory
 
 
-def Select_Action(G,Ready_state):
+def Select_Action(G,memory,Ready_state,Action_History):
 	#優先作業の検出
 	pri_f_result = Find_Specific_Attribute_Node(G,"Priority_Flag",True)
 
@@ -57,7 +57,6 @@ def Select_Action(G,Ready_state):
 			pri_result.append(i)
 
 	if pri_result:
-			
 		print(pri_result)
 		now_task = random.choice(pri_result)
 		#優先作業flagをOFFにする
@@ -68,7 +67,7 @@ def Select_Action(G,Ready_state):
 			print(Ready_state)
 			now_task = random.choice(Ready_state)
 
-	Ready_state.remove(now_task)
+	
 	return G,now_task
 
 def Select_WorkSpace(G,memory,now_task):
@@ -83,6 +82,8 @@ def Select_WorkSpace(G,memory,now_task):
 			work_name ="IH2"
 		else:
 			print("Time_Pass")
+			work_name ="Pass"
+			cost = 0
 
 	#ワークスペースを使用する作業の場合
 	elif now_task in Find_Specific_Attribute_Node(G,"Use_Resource","work"):
@@ -94,7 +95,8 @@ def Select_WorkSpace(G,memory,now_task):
 			work_name ="work2"
 		else:
 			print("Time_Pass")
-
+			work_name ="Pass"
+			cost = 0
 	else:
 		pass
 
@@ -149,21 +151,42 @@ def Record_Memory(G,memory,now_task,work_name,cost,time,Multi):
 
 
 	return G,memory
-def Check_Time(G,memory,time_count,mult_f):
+
+
+
+
+def Check_Time(G,All_state,Ready_state,memory,time_count,mult_f):
 
 	
 	for key in memory:
 		if len(memory[key]["time_memory"]) > 0:
 			if len(memory[key]["time_memory"]) == time_count:
 				memory[key]["state"] =True
+				if memory[key]["time_memory"][-1] !="":
+					G,Ready_state = Add_Next_State(G,All_state,Ready_state,memory[key]["time_memory"][-1])
 				if not memory[key]["time_memory"][-1] in Find_Specific_Attribute_Node(G,"Multitasking",True):
 					mult_f = True
 
 
-	return memory,mult_f
+	return G,Ready_state,memory,mult_f
+
+
+
+
+
+
 
 def Add_Next_State(G,All_state,Ready_state,now_task):
+
+	print("%%%%%%%%%%%%%%%%%%%")
+	print("END_TASK",now_task)
+	Ready_state.remove(now_task)
+	G = SFC.Control_State(G,All_state,now_task)
+	G,result = SFC.Next_State(G,now_task)
+	Ready_state.extend(result)
 	return G,Ready_state
+
+
 def Main():
 	memory,cost_memory = init()
 	G,All_state,Ready_state = SFC.Initialization()
@@ -171,31 +194,42 @@ def Main():
 	now_task =""
 	mult_f =True
 	pass_f = False
-
-
+	work_space_name =""
+	Action_History=[]
+	print("############################")
 	print("Start",Ready_state)
 	#1回転を30秒タスク
 	while True:
-		memory,mult_f = Check_Time(G,memory,time_count,mult_f)
+		print("::::::::::::::::::::::::::::")
+		for key in memory:
+			print(key,memory[key]["state"])
+		for key in memory:
+			print(key,memory[key]["time_memory"])
+		print("::::::::::::::::::::::::::::")
+
+		
+		G,Ready_state,memory,mult_f = Check_Time(G,All_state,Ready_state,memory,time_count,mult_f)
 		if not Ready_state:
 			break
 		#行動Aを選択する
 		if mult_f:
-			G,now_task = Select_Action(G,Ready_state)
+			G,now_task = Select_Action(G,memory,Ready_state,Action_History)
 			print("タスク状態",now_task)
 			#行動Aを行える場所を決定する
 			G,work_space_name,cost = Select_WorkSpace(G,memory,now_task)
 			print("タスク状態",now_task,"Cost",cost)
 
-			mult_flag = Multi_Juge(G,now_task)
-			mult_f = mult_flag
-			G,memory = Record_Memory(G,memory,now_task,work_space_name,cost,time_count,mult_flag)
+			if work_space_name != "Pass":
+				mult_flag = Multi_Juge(G,now_task)
+				mult_f = mult_flag
+				G,memory = Record_Memory(G,memory,now_task,work_space_name,cost,time_count,mult_flag)
 
-			#G,Ready_state = Add_Next_State(G,All_state,Ready_state,now_task)
+				#G,Ready_state = Add_Next_State(G,All_state,Ready_state,now_task)
 
 		print("\n ######################")
 		print("Time ",time_count)
-		time_count+=1
+		if work_space_name != "Pass":
+			time_count+=1
 
 
 

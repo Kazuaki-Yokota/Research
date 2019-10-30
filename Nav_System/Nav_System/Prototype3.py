@@ -1,4 +1,5 @@
 
+
 import Recipe_Mode as RM
 import State_Flow as SFC
 import pprint
@@ -151,20 +152,35 @@ def Record_Memory(G,memory,now_task,work_name,cost,time,Multi):
 
 
 	return G,memory
-def Check_Time(G,memory,time_count,mult_f):
+
+
+
+
+def Check_Time(G,All_state,Ready_state,memory,time_count,mult_f):
 
 	
 	for key in memory:
 		if len(memory[key]["time_memory"]) > 0:
 			if len(memory[key]["time_memory"]) == time_count:
 				memory[key]["state"] =True
+				#if memory[key]["time_memory"][-1] !="":
+				#	G,Ready_state = Add_Next_State(G,All_state,Ready_state,memory[key]["time_memory"][-1])
 				if not memory[key]["time_memory"][-1] in Find_Specific_Attribute_Node(G,"Multitasking",True):
 					mult_f = True
 
 
-	return memory,mult_f
+	return G,Ready_state,memory,mult_f
+
+
+
+
+
+
 
 def Add_Next_State(G,All_state,Ready_state,now_task):
+
+	print("%%%%%%%%%%%%%%%%%%%")
+	print("END_TASK",now_task)
 	Ready_state.remove(now_task)
 	G = SFC.Control_State(G,All_state,now_task)
 	G,result = SFC.Next_State(G,now_task)
@@ -179,7 +195,7 @@ def Main():
 	now_task =""
 	mult_f =True
 	pass_f = False
-
+	work_space_name =""
 	Action_History=[]
 	print("############################")
 	print("Start",Ready_state)
@@ -191,7 +207,9 @@ def Main():
 		for key in memory:
 			print(key,memory[key]["time_memory"])
 		print("::::::::::::::::::::::::::::")
-		memory,mult_f = Check_Time(G,memory,time_count,mult_f)
+
+		
+		G,Ready_state,memory,mult_f = Check_Time(G,All_state,Ready_state,memory,time_count,mult_f)
 		if not Ready_state:
 			break
 		#行動Aを選択する
