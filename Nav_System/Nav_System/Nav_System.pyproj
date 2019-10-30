@@ -11,6 +11,7 @@
     <OutputPath>.</OutputPath>
     <Name>Nav_System</Name>
     <RootNamespace>Nav_System</RootNamespace>
+    <TestFramework>Pytest</TestFramework>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
