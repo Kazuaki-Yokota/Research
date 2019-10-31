@@ -33,6 +33,7 @@ def init():
 	IH2_time_state = True
 
 	cost_memory ={"work1":[],"work2":[],"IH1":[],"IH2":[]}
+	now_task_list =[]
 
 	memory ={"work1":{"time_memory":work1_time_memory,"state":work1_time_state},
 		  "work2":{"time_memory":work2_time_memory,"state":work2_time_state},
@@ -42,10 +43,10 @@ def init():
 	#調理者の状態
 	user_state = True
 
-	return memory,cost_memory
+	return memory,cost_memory,now_task_list
 
 
-def Select_Action(G,memory,Ready_state,Action_History):
+def Select_Action(G,memory,Ready_state,Action_History,now_task_list):
 	#優先作業の検出
 	pri_f_result = Find_Specific_Attribute_Node(G,"Priority_Flag",True)
 
@@ -59,16 +60,25 @@ def Select_Action(G,memory,Ready_state,Action_History):
 	if pri_result:
 		print(pri_result)
 		now_task = random.choice(pri_result)
-		#優先作業flagをOFFにする
-		G.nodes[str(now_task)]["Priority_Flag"] = False
+		for n in list(G.predecessors(now_task)):
+			if not now_task in now_task_list:
+				#優先作業flagをOFFにする
+				G.nodes[str(now_task)]["Priority_Flag"] = False
+			else:
+				if Ready_state:
+					Ready_state.remove(now_task)
+					up_now_task = random.choice(Ready_state)
+					Ready_state.append(now_task)
+					now_task = up_now_task
 	else:
 		#Reay_Stateから行動を選択
 		if Ready_state:
 			print(Ready_state)
 			now_task = random.choice(Ready_state)
 
-	
-	return G,now_task
+	Ready_state.remove(now_task)
+	now_task_list.append(now_task)
+	return G,now_task,now_task_list
 
 def Select_WorkSpace(G,memory,now_task):
 	#作業場所の決定
@@ -155,20 +165,22 @@ def Record_Memory(G,memory,now_task,work_name,cost,time,Multi):
 
 
 
-def Check_Time(G,All_state,Ready_state,memory,time_count,mult_f):
+def Check_Time(G,All_state,Ready_state,memory,time_count,mult_f,now_task_list):
 
 	
 	for key in memory:
 		if len(memory[key]["time_memory"]) > 0:
 			if len(memory[key]["time_memory"]) == time_count:
 				memory[key]["state"] =True
-				if memory[key]["time_memory"][-1] !="":
-					G,Ready_state = Add_Next_State(G,All_state,Ready_state,memory[key]["time_memory"][-1])
+				#if memory[key]["time_memory"][-1] !="":
+					#G,Ready_state = Add_Next_State(G,All_state,Ready_state,memory[key]["time_memory"][-1])
+				if memory[key]["time_memory"][-1] in now_task_list:
+					now_task_list.remove(memory[key]["time_memory"][-1])
 				if not memory[key]["time_memory"][-1] in Find_Specific_Attribute_Node(G,"Multitasking",True):
 					mult_f = True
 
 
-	return G,Ready_state,memory,mult_f
+	return G,Ready_state,memory,mult_f,now_task_list
 
 
 
@@ -180,7 +192,7 @@ def Add_Next_State(G,All_state,Ready_state,now_task):
 
 	print("%%%%%%%%%%%%%%%%%%%")
 	print("END_TASK",now_task)
-	Ready_state.remove(now_task)
+	#Ready_state.remove(now_task)
 	G = SFC.Control_State(G,All_state,now_task)
 	G,result = SFC.Next_State(G,now_task)
 	Ready_state.extend(result)
@@ -188,7 +200,7 @@ def Add_Next_State(G,All_state,Ready_state,now_task):
 
 
 def Main():
-	memory,cost_memory = init()
+	memory,cost_memory,now_tassk_list = init()
 	G,All_state,Ready_state = SFC.Initialization()
 	time_count = 0
 	now_task =""
@@ -208,12 +220,12 @@ def Main():
 		print("::::::::::::::::::::::::::::")
 
 		
-		G,Ready_state,memory,mult_f = Check_Time(G,All_state,Ready_state,memory,time_count,mult_f)
+		G,Ready_state,memory,mult_f,now_tassk_list = Check_Time(G,All_state,Ready_state,memory,time_count,mult_f,now_tassk_list)
 		if not Ready_state:
 			break
 		#行動Aを選択する
 		if mult_f:
-			G,now_task = Select_Action(G,memory,Ready_state,Action_History)
+			G,now_task,now_tassk_list = Select_Action(G,memory,Ready_state,Action_History,now_tassk_list)
 			print("タスク状態",now_task)
 			#行動Aを行える場所を決定する
 			G,work_space_name,cost = Select_WorkSpace(G,memory,now_task)
@@ -224,7 +236,9 @@ def Main():
 				mult_f = mult_flag
 				G,memory = Record_Memory(G,memory,now_task,work_space_name,cost,time_count,mult_flag)
 
-				#G,Ready_state = Add_Next_State(G,All_state,Ready_state,now_task)
+				G,Ready_state = Add_Next_State(G,All_state,Ready_state,now_task)
+
+
 
 		print("\n ######################")
 		print("Time ",time_count)
