@@ -63,13 +63,15 @@ def Select_Action(G,memory,Ready_state,Action_History,now_task_list):
 
 
 		juge_count = 0
+		print("SSSSSSSSSSSSSSSSSS")
 		for n in list(G.predecessors(now_task)):
 			if n == "":
 				print("スタート位置状態")
 			elif G.nodes[n]["Finsh_Action_Juge"] == True:
 				juge_count +=1
-
-
+				print(juge_count)
+			else:
+				print("AAA")
 
 		print("pre",list(G.predecessors("S13")))
 		
@@ -243,7 +245,7 @@ def Main():
 				mult_f = mult_flag
 				G,memory = Record_Memory(G,memory,now_task,work_space_name,cost,time_count,mult_flag)
 
-				#G,Ready_state = Add_Next_State(G,All_state,Ready_state,now_task)
+				G,Ready_state = Add_Next_State(G,All_state,Ready_state,now_task)
 
 
 
