@@ -11,6 +11,7 @@ import Recipe_Mode as RM
 Start_Node_list =[]
 Set_Node_Color = "Set_Node_Color"
 Action_Juge_Name = 'Action_Juge'
+Finsh_Action_Juge_Name ="Finsh_Action_Juge"
 Priority_Flag = "Priority_Flag"
 Cost_Time = "Cost_Time"
 Use_Resource = "Use_Resource"
@@ -29,6 +30,7 @@ def Create_State_transition_init():
 
 	####各ノードに情報を追加設定#################################################################################################################
 	nx.set_node_attributes(G, name=Action_Juge_Name , values=False)
+	nx.set_node_attributes(G, name= Finsh_Action_Juge_Name, values=False)
 	nx.set_node_attributes(G, name= Set_Node_Color, values="y")
 	nx.set_node_attributes(G, name= Priority_Flag, values=False)
 	####料理iの最終調理作業jの設定######################

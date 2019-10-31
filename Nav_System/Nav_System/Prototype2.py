@@ -64,12 +64,7 @@ def Select_Action(G,memory,Ready_state,Action_History,now_task_list):
 			if not now_task in now_task_list:
 				#優先作業flagをOFFにする
 				G.nodes[str(now_task)]["Priority_Flag"] = False
-			else:
-				if Ready_state:
-					Ready_state.remove(now_task)
-					up_now_task = random.choice(Ready_state)
-					Ready_state.append(now_task)
-					now_task = up_now_task
+			
 	else:
 		#Reay_Stateから行動を選択
 		if Ready_state:
@@ -174,8 +169,7 @@ def Check_Time(G,All_state,Ready_state,memory,time_count,mult_f,now_task_list):
 				memory[key]["state"] =True
 				#if memory[key]["time_memory"][-1] !="":
 					#G,Ready_state = Add_Next_State(G,All_state,Ready_state,memory[key]["time_memory"][-1])
-				if memory[key]["time_memory"][-1] in now_task_list:
-					now_task_list.remove(memory[key]["time_memory"][-1])
+				
 				if not memory[key]["time_memory"][-1] in Find_Specific_Attribute_Node(G,"Multitasking",True):
 					mult_f = True
 
@@ -236,7 +230,7 @@ def Main():
 				mult_f = mult_flag
 				G,memory = Record_Memory(G,memory,now_task,work_space_name,cost,time_count,mult_flag)
 
-				G,Ready_state = Add_Next_State(G,All_state,Ready_state,now_task)
+				#G,Ready_state = Add_Next_State(G,All_state,Ready_state,now_task)
 
 
 
