@@ -61,6 +61,7 @@ def Create_State_transition_init():
 	####各作業で使用するリソース#########################
 	for multitasking_name,node_num_list in multitasking.items():
 		for node_num in node_num_list:
+			print(type(node_num))
 			G.nodes[node_num][Multitasking] = True
 	#####################################################
 

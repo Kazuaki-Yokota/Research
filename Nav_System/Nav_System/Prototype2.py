@@ -60,10 +60,20 @@ def Select_Action(G,memory,Ready_state,Action_History,now_task_list):
 	if pri_result:
 		print(pri_result)
 		now_task = random.choice(pri_result)
+
+
+		juge_count = 0
 		for n in list(G.predecessors(now_task)):
-			if not now_task in now_task_list:
-				#優先作業flagをOFFにする
-				G.nodes[str(now_task)]["Priority_Flag"] = False
+			if n == "":
+				print("スタート位置状態")
+			elif G.nodes[n]["Finsh_Action_Juge"] == True:
+				juge_count +=1
+
+
+
+		print("pre",list(G.predecessors("S13")))
+		
+		G.nodes[str(now_task)]["Priority_Flag"] = False
 			
 	else:
 		#Reay_Stateから行動を選択
@@ -169,7 +179,10 @@ def Check_Time(G,All_state,Ready_state,memory,time_count,mult_f,now_task_list):
 				memory[key]["state"] =True
 				#if memory[key]["time_memory"][-1] !="":
 					#G,Ready_state = Add_Next_State(G,All_state,Ready_state,memory[key]["time_memory"][-1])
+				print("終了した状態",[memory[key]["time_memory"][-1]])
 				
+				if memory[key]["time_memory"][-1] != "":
+					G.nodes[memory[key]["time_memory"][-1]]["Finsh_Action_Juge"]=True
 				if not memory[key]["time_memory"][-1] in Find_Specific_Attribute_Node(G,"Multitasking",True):
 					mult_f = True
 
@@ -277,6 +290,11 @@ def Main():
 		print(str(key)+" ",len(memory[str(key)]["time_memory"]))
 	SFC.Control_State2(G,All_state,now_task)
 
+
+
+
+
+	pprint.pprint(dict(G.nodes))
 	import pandas as pd
 
 
