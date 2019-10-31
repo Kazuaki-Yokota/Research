@@ -20,7 +20,7 @@ class MainFrame(wx.Frame):
 
 		font  = wx.Font(20,wx.FONTFAMILY_DEFAULT,wx.FONTSTYLE_NORMAL,wx.FONTWEIGHT_NORMAL)
 		self.text.SetFont(font)
-		btn1 = wx.Button(p,-1,"Connect")
+		btn1 = wx.Button(p,-1,"Help")
 		btn2 = wx.Button(p,-1,"NEXT")
 
 

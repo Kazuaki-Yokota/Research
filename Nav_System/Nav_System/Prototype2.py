@@ -57,32 +57,31 @@ def Select_Action(G,memory,Ready_state,Action_History,now_task_list):
 		if i in Ready_state:
 			pri_result.append(i)
 
+	print("aAAA",pri_result)
 	if pri_result:
-		print(pri_result)
 		now_task = random.choice(pri_result)
-
-
-		juge_count = 0
-		print("SSSSSSSSSSSSSSSSSS")
-		for n in list(G.predecessors(now_task)):
-			if n == "":
-				print("スタート位置状態")
-			elif G.nodes[n]["Finsh_Action_Juge"] == True:
-				juge_count +=1
-				print(juge_count)
-			else:
-				print("AAA")
-
-		print("pre",list(G.predecessors("S13")))
-		
-		G.nodes[str(now_task)]["Priority_Flag"] = False
 			
+		juge_count = 0
+		if list(G.predecessors(now_task)):
+			for n in list(G.predecessors(now_task)):
+				if G.nodes[n]["Finsh_Action_Juge"] == True:
+					juge_count +=1
+
+			if len(list(G.predecessors(now_task))) != juge_count:
+				tmp = now_task
+				Ready_state.remove(now_task)
+				if Ready_state:
+					now_task = random.choice(Ready_state)
+					Ready_state.append(tmp)
+		else:
+			print("初期状態")
 	else:
 		#Reay_Stateから行動を選択
 		if Ready_state:
-			print(Ready_state)
 			now_task = random.choice(Ready_state)
 
+	print("Ready_state",Ready_state)
+	print("実行しようとしている状態",now_task)
 	Ready_state.remove(now_task)
 	now_task_list.append(now_task)
 	return G,now_task,now_task_list
@@ -185,6 +184,7 @@ def Check_Time(G,All_state,Ready_state,memory,time_count,mult_f,now_task_list):
 				
 				if memory[key]["time_memory"][-1] != "":
 					G.nodes[memory[key]["time_memory"][-1]]["Finsh_Action_Juge"]=True
+					G,Ready_state=Add_Next_State(G,All_state,Ready_state,memory[key]["time_memory"][-1])
 				if not memory[key]["time_memory"][-1] in Find_Specific_Attribute_Node(G,"Multitasking",True):
 					mult_f = True
 
@@ -198,11 +198,8 @@ def Check_Time(G,All_state,Ready_state,memory,time_count,mult_f,now_task_list):
 
 
 def Add_Next_State(G,All_state,Ready_state,now_task):
-
-	print("%%%%%%%%%%%%%%%%%%%")
-	print("END_TASK",now_task)
 	#Ready_state.remove(now_task)
-	G = SFC.Control_State(G,All_state,now_task)
+	G = SFC.Control_State2(G,All_state,now_task)
 	G,result = SFC.Next_State(G,now_task)
 	Ready_state.extend(result)
 	return G,Ready_state
@@ -230,7 +227,7 @@ def Main():
 
 		
 		G,Ready_state,memory,mult_f,now_tassk_list = Check_Time(G,All_state,Ready_state,memory,time_count,mult_f,now_tassk_list)
-		if not Ready_state:
+		if time_count ==200:
 			break
 		#行動Aを選択する
 		if mult_f:
@@ -245,7 +242,7 @@ def Main():
 				mult_f = mult_flag
 				G,memory = Record_Memory(G,memory,now_task,work_space_name,cost,time_count,mult_flag)
 
-				G,Ready_state = Add_Next_State(G,All_state,Ready_state,now_task)
+				#G,Ready_state = Add_Next_State(G,All_state,Ready_state,now_task)
 
 
 

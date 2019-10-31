@@ -85,6 +85,7 @@ def Sensing(now_q):
 def F_Nav(now_q,next_q,SFC_to_Nav_q,text_q):
 
 	while True:
+	
 		if not SFC_to_Nav_q.empty():
 			print("A2")
 			now_s = SFC_to_Nav_q.get()
@@ -96,12 +97,15 @@ def F_Nav(now_q,next_q,SFC_to_Nav_q,text_q):
 #状態遷移を管理する
 def F_SFC(now_q,next_q,SFC_to_Nav_q):
 	while True:
+	
 		if not now_q.empty():
 			print("A3")
 			now_s = now_q.get()
-			G,state_list = SFC.Initialization()
+			print("now_s",now_s)
+			G,state_list,Start_Node_list = SFC.Initialization()
 			
 			SFC.Control_State(G,state_list,now_s)
+			print("SFC")
 			print(dict(G.nodes))
 			SFC_to_Nav_q.put(now_s)
 

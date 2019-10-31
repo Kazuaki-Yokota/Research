@@ -105,11 +105,11 @@ def Control_State(G,state_list,now_state):
 
 	position = nx.spring_layout(G,)
 
-	#nx.draw_networkx_nodes(G,position,node_color = color_list)
-	#nx.draw_networkx_edges(G,position)
-	#nx.draw_networkx_labels(G,position)
-	#plt.show()
-	return G
+	nx.draw_networkx_nodes(G,position,node_color = color_list)
+	nx.draw_networkx_edges(G,position)
+	nx.draw_networkx_labels(G,position)
+	plt.show()
+	#return G
 
 #遷移状態を記録する
 def Control_State2(G,state_list,now_state):

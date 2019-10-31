@@ -15,4 +15,4 @@ def Main(now_state):
 	return receipe_text_data[now_state]
 	
 
-#Main("S1")
+#print(Main("S1"))
