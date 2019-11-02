@@ -42,6 +42,7 @@ def Create_State_transition_init():
 	
 	####優先Flagを設定###################################
 	priority_flag =["S9","SS1","S10","SS2"]
+	#priority_flag =["S16"]
 	for i in range(0,len(priority_flag)):
 		#print(End_Node[i])
 		nx.set_node_attributes(G, name=Priority_Flag , values={priority_flag[i]:True})

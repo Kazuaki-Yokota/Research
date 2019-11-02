@@ -96,15 +96,16 @@ def F_Nav(now_q,next_q,SFC_to_Nav_q,text_q):
 
 #状態遷移を管理する
 def F_SFC(now_q,next_q,SFC_to_Nav_q):
+	G,state_list,Start_Node_list = SFC.Initialization()
 	while True:
 	
 		if not now_q.empty():
 			print("A3")
 			now_s = now_q.get()
 			print("now_s",now_s)
-			G,state_list,Start_Node_list = SFC.Initialization()
 			
-			SFC.Control_State(G,state_list,now_s)
+			
+			G = SFC.Control_State2(G,state_list,now_s)
 			print("SFC")
 			print(dict(G.nodes))
 			SFC_to_Nav_q.put(now_s)

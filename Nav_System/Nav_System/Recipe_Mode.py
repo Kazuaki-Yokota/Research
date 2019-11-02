@@ -22,6 +22,7 @@ def Recipe():
 
 	multitasking ={"Multitasking":["S9","S10","SS1","SS2"]}
 	#multitasking ={"Multitasking":["S9","SS1"]}
+	#multitasking ={"Multitasking":[]}
 	return total_recipe_state_list,first_recipe_state_list,second_recipe_state_list,first_recipe_flow_edges_list,second_recipe_flow_edges_list,cost_time,use_resource,multitasking
 
 
