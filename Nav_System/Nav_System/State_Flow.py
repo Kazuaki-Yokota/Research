@@ -151,8 +151,10 @@ def Next_State(G,now_state):
 				print(next_s_count)
 			if next_s_count==len(par_s):
 				result.append(next_s[i])
-	print(result)		
+			
 	return G,result
+
+
 def Initialization():
 	#######初期化機能##############
 	#フローグラフの初期化と生成
