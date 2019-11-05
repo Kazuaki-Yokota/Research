@@ -2,8 +2,10 @@
   "ExpandedNodes": [
     "",
     "\\Nav_System",
-    "\\Nav_System\\Nav_System"
+    "\\Nav_System\\Nav_System",
+    "\\Nav_System\\Nav_System\\Nav",
+    "\\Nav_System\\Nav_System\\Scheduling"
   ],
-  "SelectedNode": "\\Nav_System\\Nav_System\\Connect.py",
+  "SelectedNode": "\\Nav_System\\Nav_System\\Scheduling\\State_Flow.py",
   "PreviewInSolutionExplorer": false
 }

@@ -72,7 +72,7 @@ def Create_State_transition_init():
 	nx.draw_networkx_nodes(G,position)
 	nx.draw_networkx_edges(G,position)
 	nx.draw_networkx_labels(G,position)
-	plt.show()
+	#plt.show()
 	return G,State_list,End_Node
 
 #フローグラフの深度の深いところから探索
